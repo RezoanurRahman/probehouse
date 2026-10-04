@@ -63,7 +63,7 @@ function formatDate(value: string): string {
 }
 
 function participantId(participant: Participant): string {
-  return participant.email;
+  return participant.id;
 }
 
 function nextStatus(status: ParticipantStatus): ParticipantStatus | null {

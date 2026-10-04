@@ -4,7 +4,6 @@ import type { Participant, Session, SessionStatus } from '../shared/types';
 import StatusPill from './StatusPill.vue';
 
 interface SessionRow {
-  key: string;
   id: string;
   session: Session;
   day: string;
@@ -85,10 +84,7 @@ function formatDuration(minutes: number): string {
 function resolveParticipantName(participantId: string | undefined): string {
   if (!participantId) return 'Unassigned';
   const match = props.participants.find(
-    (participant) =>
-      participant.email === participantId ||
-      participant.name === participantId ||
-      participant.initials === participantId,
+    (participant) => participant.id === participantId || participant.email === participantId,
   );
   return match ? match.name : 'Unassigned';
 }
@@ -105,8 +101,7 @@ const rows = computed<SessionRow[]>(() =>
   props.sessions.map((session) => {
     const next = nextStatus(session.status);
     return {
-      key: `${session.title}::${session.startsAt}`,
-      id: session.title,
+      id: session.id,
       session,
       day: formatDay(session.startsAt),
       timeRange: formatTimeRange(session.startsAt, session.durationMinutes),
@@ -140,7 +135,7 @@ function setStatus(row: SessionRow, event: Event): void {
 
 <template>
   <ul v-if="rows.length > 0" class="session-list">
-    <li v-for="row in rows" :key="row.key" class="session-row">
+    <li v-for="row in rows" :key="row.id" class="session-row">
       <div class="session-date">
         <time class="session-day" :datetime="row.session.startsAt">{{ row.day }}</time>
         <span class="session-time">{{ row.timeRange }}</span>
